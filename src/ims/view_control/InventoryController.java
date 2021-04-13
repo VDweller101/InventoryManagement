@@ -94,8 +94,15 @@ public class InventoryController {
     ////    Parts Pane Actions
     */
     @FXML
-    private void partsAddButton(ActionEvent event) throws IOException {
+    private void partsAddButton(ActionEvent event) throws IOException
+    {
         switchScene(0, event);
+    }
+
+    @FXML
+    private void partsModifyButton(ActionEvent event) throws IOException {
+        switchScene(1, event);
+        //TODO Get currently selected part to modify
     }
 
     // Check if user actually wants to quit.

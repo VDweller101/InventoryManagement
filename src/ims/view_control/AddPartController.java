@@ -7,9 +7,11 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class AddPartController {
 
@@ -68,6 +70,23 @@ public class AddPartController {
 
     @FXML
     private void addPartCancelButton(ActionEvent event) throws IOException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "All unsaved changes will be lost.");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.setHeaderText("Cancel new part?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            returnToMainMenu(event);
+        }
+    }
+
+    @FXML
+    private void addPartExitButton (ActionEvent event)
+    {
+        Utilities.ExitApplication(event);
+    }
+
+    private void returnToMainMenu(ActionEvent event)
+    {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         Parent root = null;
         try {
@@ -78,12 +97,6 @@ public class AddPartController {
         stage.setTitle("Inventory");
         stage.setScene(new Scene(root, 800, 400));
         stage.show();
-    }
-
-    @FXML
-    private void addPartExitButton (ActionEvent event)
-    {
-        Utilities.ExitApplication(event);
     }
 }
 

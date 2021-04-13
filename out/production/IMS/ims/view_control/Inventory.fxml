@@ -27,7 +27,7 @@
               </columns>
             </TableView>
             <Button fx:id="partsDeleteButton" layoutX="283.0" layoutY="246.0" mnemonicParsing="false" text="Delete" />
-            <Button fx:id="partsModifyButton" layoutX="222.0" layoutY="246.0" mnemonicParsing="false" text="Modify" />
+            <Button fx:id="partsModifyButton" layoutX="222.0" layoutY="246.0" mnemonicParsing="false" onAction="#partsModifyButton" text="Modify" />
             <Button fx:id="partsAddButton" layoutX="178.0" layoutY="246.0" mnemonicParsing="false" onAction="#partsAddButton" text="Add" />
             <Label fx:id="partsLabel" layoutX="14.0" layoutY="14.0" text="Parts">
                <font>

@@ -78,9 +78,9 @@
         </Pane>
         <Pane fx:id="SAVE_CANCEL" layoutX="150.0" layoutY="513.0" prefHeight="73.0" prefWidth="200.0">
             <children>
-                <Button fx:id="modifyPartSaveButton" layoutX="14.0" layoutY="24.0" mnemonicParsing="false" text="Save" />
-                <Button fx:id="modifyPartCancelButton" layoutX="74.0" layoutY="24.0" mnemonicParsing="false" text="Cancel" />
-                <Button fx:id="modifyPartExitButton" layoutX="151.0" layoutY="24.0" mnemonicParsing="false" text="Exit" />
+                <Button fx:id="modifyPartSaveButton" layoutX="14.0" layoutY="24.0" mnemonicParsing="false" onAction="#modifyPartSaveButton" text="Save" />
+                <Button fx:id="modifyPartCancelButton" layoutX="74.0" layoutY="24.0" mnemonicParsing="false" onAction="#modifyPartCancelButton" text="Cancel" />
+                <Button fx:id="modifyPartExitButton" layoutX="151.0" layoutY="24.0" mnemonicParsing="false" onAction="#modifyPartExitButton" text="Exit" />
             </children>
         </Pane>
     </children>

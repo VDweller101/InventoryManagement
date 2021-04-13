@@ -28,8 +28,5 @@ public class Utilities
         if (result.get() == ButtonType.OK) {
             System.exit(0);
         }
-        else {
-            System.out.println("User cancelled quit.");
-        }
     }
 }
