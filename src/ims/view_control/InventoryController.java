@@ -105,6 +105,15 @@ public class InventoryController {
         //TODO Get currently selected part to modify
     }
 
+    @FXML
+    private void productsAddButton (ActionEvent event) throws IOException {
+        switchScene(2, event);
+    }
+
+    @FXML
+    private void productsModifyButton (ActionEvent event) throws IOException {
+        switchScene(3, event);
+    }
     // Check if user actually wants to quit.
     @FXML
     private void inventoryExitButton(ActionEvent event)
@@ -145,7 +154,7 @@ public class InventoryController {
                     e.printStackTrace();
                 }
                 stage.setTitle("Add Product");
-                stage.setScene(new Scene(root, 500, 600));
+                stage.setScene(new Scene(root, 800, 600));
                 break;
             case 3:
                 try {
@@ -154,7 +163,7 @@ public class InventoryController {
                     e.printStackTrace();
                 }
                 stage.setTitle("Modify Product");
-                stage.setScene(new Scene(root, 500, 600));
+                stage.setScene(new Scene(root, 800, 600));
                 break;
             default:
                 System.out.println("Call for unknown scene index" + sceneIndex);
