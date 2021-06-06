@@ -73,7 +73,7 @@ public class Utilities
     {
         int stock = product.getStock();
         String errorMessage = "";
-        if(product.getID() < 0) { errorMessage += "Product ID must be a positive number.\n"; }
+        if(product.getId() < 0) { errorMessage += "Product ID must be a positive number.\n"; }
         if (product.getName() == "") { errorMessage += "Product name must not be blank.\n"; }
         if (stock < 0) { errorMessage += "Product Stock level must be greater 0.\n"; }
         if (stock < product.getMin()) { errorMessage += "Product Stock level must be greater than Inventory Minimum.\n"; }
@@ -161,6 +161,27 @@ public class Utilities
                 message += "Stock level must be lower than maximum stock level.\n";
             }
         }
+
+        return message;
+    }
+
+    public static String AreProductFieldsValid(String idString, String nameString, String priceString, String stockString, String minString, String maxString, int partCount)
+    {
+        String message = "";
+        //int id, String name, double price, int stock, int min, int max
+        Integer id = Utilities.TryParseInt(idString);
+        if (id == null) { message += "Product ID must be a valid integer and can not be blank.\n"; }
+        String name = nameString;
+        if (nameString.isBlank()) { message += "Product must have a valid Name.\n"; }
+        Double price = Utilities.TryParseDouble(priceString);
+        if (price == null) { message += "Price must be a valid decimal number and can not be blank.\n"; }
+        Integer stock = Utilities.TryParseInt(stockString);
+        if (stock == null) { message += "Product stock level must be a valid integer value and must not be blank.\n"; }
+        Integer min = Utilities.TryParseInt(minString);
+        if (min == null) { message += "Inventory minimum level must be a valid integer value and must not be blank.\n"; }
+        Integer max = Utilities.TryParseInt(maxString);
+        if (max == null) { message += "Inventory maximum level must be a valid integer value and must not be blank.\n"; }
+        if (partCount < 1) { message += "Product must have at east 1 part.\n"; }
 
         return message;
     }

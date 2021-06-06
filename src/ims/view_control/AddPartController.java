@@ -160,59 +160,55 @@ public class AddPartController {
     @FXML
     private Part createPartFromFields()
     {
-        //int id, String name, double price, int stock, int min, int max, String companyName
-        String errorMessage = "";
-        Integer id = Utilities.TryParseInt(addPartIDTextField.getText());
-        if (id == null) {
-            errorMessage += "ID must be valid number and can not be blank.\n";
-        }
-        String name = addPartNameTextField.getText();
-        Double price = Utilities.TryParseDouble(addPartPriceTextField.getText());
-        if (price == null) {
-            errorMessage += "Price must be valid decimal value and can not be blank.\n";
-        }
-        Integer stock = Utilities.TryParseInt(addPartStockTextField.getText());
-        if (stock == null) {
-            errorMessage += "Stock level must be a valid numerical value and can not be blank.\n";
-        }
-        Integer min = Utilities.TryParseInt(addPartMinTextField.getText());
-        if (min == null) {
-            errorMessage += "Minimun Inventory level must be a valid number and must not be blank.\n";
-        }
-        Integer max = Utilities.TryParseInt(addPartMaxTextField.getText());
-        if (max == null) {
-            errorMessage += "Maximum Inventory level must be a valid number and must not be blank.\n";
-        }
-        if(addPartInHouseRadio.isSelected()) {
-            Integer machineID = Utilities.TryParseInt(addPartMachineCompanyTextField.getText());
-            if (machineID == null) {
-                errorMessage += "Machine ID must be a valid number and must not be blank.\n";
-            }
-            if (errorMessage.isBlank()) {
+        //Represents In-House vs Outsourced Part
+        Boolean type;
+        if (addPartInHouseRadio.isSelected()){ type = true; }
+        else { type = false; }
+
+        //Validate the text fields. Return error message of any problems.
+        String errorMessage = Utilities.ArePartFieldsValid(
+                type,
+                addPartIDTextField.getText(),
+                addPartNameTextField.getText(),
+                addPartPriceTextField.getText(),
+                addPartStockTextField.getText(),
+                addPartMinTextField.getText(),
+                addPartMaxTextField.getText(),
+                addPartMachineCompanyTextField.getText());
+        //If error message blank, part is valid. Create part.
+        if (errorMessage.isBlank()) {
+            Integer id = Utilities.TryParseInt(addPartIDTextField.getText());
+            String name = addPartNameTextField.getText();
+            Double price = Utilities.TryParseDouble(addPartPriceTextField.getText());
+            Integer stock = Utilities.TryParseInt(addPartStockTextField.getText());
+            Integer min = Utilities.TryParseInt(addPartMinTextField.getText());
+            Integer max = Utilities.TryParseInt(addPartMaxTextField.getText());
+            //if-else for In-house vs Outsourced.
+            if (addPartInHouseRadio.isSelected()) {
+                //Create In-House Part
+                Integer machineID = Utilities.TryParseInt(addPartMachineCompanyTextField.getText());
                 Part part = new InHouse(id, name, price, stock, min, max, machineID);
                 String message = Utilities.IsPartValid ((InHouse)part);
-                if (message.isBlank()) {
-                    return part;
-                } else {
-                    Utilities.DisplayErrorMessage("Part Creation Error", message);
-                }
+                //One more validation, this time on the Part object itself. Don't want invalid parts leaving this class.
+                if (message.isBlank()) { return part; }
+                else { Utilities.DisplayErrorMessage("Part Creation Error", message); }
             } else {
-                Utilities.DisplayErrorMessage("Part Creation Error", errorMessage);
+                //Create Outsourced Part
+                String companyName = addPartMachineCompanyTextField.getText();
+                if (errorMessage.isBlank()) {
+                    Part part = new Outsourced(id, name, price, stock, min, max, companyName);
+                    //One more validation, this time on the Part object itself. Don't want invalid parts leaving this class.
+                    String message = Utilities.IsPartValid ((Outsourced) part);
+                    if (message.isBlank()) { return part; }
+                    else { Utilities.DisplayErrorMessage("Part Creation Error", message); }
+                } else {
+                    Utilities.DisplayErrorMessage("Part Creation Error", errorMessage);
+                }
             }
         } else {
-            String companyName = addPartMachineCompanyTextField.getText();
-            if (errorMessage.isBlank()) {
-                Part part = new Outsourced(id, name, price, stock, min, max, companyName);
-                String message = Utilities.IsPartValid ((Outsourced) part);
-                if (message.isBlank()) {
-                    return part;
-                } else {
-                    Utilities.DisplayErrorMessage("Part Creation Error", message);
-                }
-            } else {
-                Utilities.DisplayErrorMessage("Part Creation Error", errorMessage);
-            }
+            Utilities.DisplayErrorMessage("Part Creation Error", errorMessage);
         }
+        Utilities.DisplayErrorMessage("Unknown Error", "Returning null value from AddPartController.createPartFromFields()");
         return null;
     }
 }

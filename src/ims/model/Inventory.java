@@ -36,6 +36,10 @@ public class Inventory
     */
     public Product lookupProduct(int productId)
     {
+        for (Product product:allProducts
+             ) {
+            if (productId == product.getId()) { return product; }
+        }
         return null;
     }
 
@@ -67,9 +71,24 @@ public class Inventory
     /*
     @return Looks through allProducts for the productName and returns any matches, otherwise returns null.
     */
-    public ObservableList<Product> lookupProduct (String productName)
+    public static ObservableList<Product> lookupProduct(String productName)
     {
-        return null;
+        if (productName.isBlank()) { return allProducts; }
+        else {
+            ObservableList<Product> matchingProducts = FXCollections.observableArrayList();
+
+            int count = productName.length();
+            for (Product product:allProducts
+                 ) {
+                if (productName.length() <= product.getName().length()) {
+                    String subName = product.getName().substring(0, count);
+                    if(subName.equals(productName)) {
+                        matchingProducts.add(product);
+                    }
+                }
+            }
+            return matchingProducts;
+        }
     }
 
     // Deletes the old part and adds the new one. Will display message to console if unsuccessful

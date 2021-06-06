@@ -3,6 +3,7 @@ package ims.view_control;
 import ims.model.Inventory;
 import ims.model.Part;
 import ims.model.Product;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -141,7 +142,7 @@ public class InventoryController {
                 if (Inventory.deletePart(selected) != true) {
                     Utilities.DisplayErrorMessage("Failed Deletion", "The item deletion has failed.");
                 } else {
-                    UpdateProductList();
+                    switchScene(4, event);
                 }
             } else {
                 Utilities.DisplayErrorMessage("Select Part", "You must select a part to delete.");
@@ -181,7 +182,17 @@ public class InventoryController {
             partsTableView.getItems().clear();
             partsTableView.getItems().setAll(Inventory.getAllParts());
         } else {
-            partsTableView.getItems().setAll(Inventory.lookupPart(searchString));
+            if (Utilities.TryParseInt(searchString) != null) {
+                //Search by ID
+                partsTableView.getItems().clear();
+                ObservableList<Part> part = FXCollections.observableArrayList();
+                part.add(Inventory.lookupPart(Utilities.TryParseInt(searchString)));
+                partsTableView.getItems().setAll(part);
+            } else {
+                //Search by Name
+                partsTableView.getItems().clear();
+                partsTableView.getItems().setAll(Inventory.lookupPart(searchString));
+            }
         }
     }
 
@@ -200,8 +211,10 @@ public class InventoryController {
 
     public void UpdateProductList()
     {
-        partsTableView.refresh();
         System.out.println("Refreshing Products tableview");
+        productsTableView.getSelectionModel().clearSelection();
+        productsTableView.getItems().clear();
+        productsTableView.getItems().setAll(Inventory.getAllProducts());
 
     }
 
@@ -258,6 +271,15 @@ public class InventoryController {
                 }
                 stage.setTitle("Modify Product");
                 stage.setScene(new Scene(root, 800, 600));
+                break;
+            case 4:
+                try {
+                    root = FXMLLoader.load(getClass().getResource("Inventory.fxml"));
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+                stage.setTitle("Inventory Management System");
+                stage.setScene(new Scene(root, 800, 400));
                 break;
             default:
                 System.out.println("Call for unknown scene index" + sceneIndex);

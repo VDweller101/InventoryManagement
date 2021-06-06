@@ -48,7 +48,7 @@ public class Product {
     /*
     ////    Getters
     */
-    public int getID () {
+    public int getId () {
         return id;
     }
     public String getName () {
