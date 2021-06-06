@@ -33,12 +33,8 @@ public class Product {
     public void setID (int id) {
         this.id = id;
     }
-    public void setName (String name) {
-        this.name = name;
-    }
-    public void setPrice (double price) {
-        this.price = price;
-    }
+    public void setName (String name) { this.name = name; }
+    public void setPrice (double price) { this.price = price; }
     public void setStock (int stock) {
         this.stock = stock;
     }
@@ -71,19 +67,25 @@ public class Product {
         return max;
     }
 
+
     /*
     ////    Part Management
     */
-    public void addAssociatedPart(Part part) {
-        associatedParts.add(part);
-        //TODO Update IMS TableView
-    }
+
+    //Add part to associatedParts list of product.
+    public void addAssociatedPart(Part part) { associatedParts.add(part); }
+
+    //Delete associated part from products part list. Check if the part is within the associatedParts list. Return true if deletion successful.
     public boolean deleteAssociatedPart (Part part) {
-        associatedParts.remove(part);
-        //TODO Set up to return bool if deletion was successful.
-        return true;
+        if(associatedParts.contains(part))
+        {
+            associatedParts.remove(part);
+            return true;
+        } else {
+            return false;
+        }
     }
-    public ObservableList<Part> getAllAssociatedParts() {
-        return associatedParts;
-    }
+
+    //Return list of parts associated with product.
+    public ObservableList<Part> getAllAssociatedParts() { return associatedParts; }
 }

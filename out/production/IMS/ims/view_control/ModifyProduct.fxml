@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ims.view_control.ModifyProductController">
+    <children>
+        <Pane fx:id="INFO" layoutX="40.0" layoutY="44.0" prefHeight="511.0" prefWidth="367.0">
+            <children>
+                <Label layoutX="33.0" layoutY="36.0" text="Modify Product">
+                    <font>
+                        <Font name="System Bold" size="14.0" />
+                    </font>
+                </Label>
+                <Pane layoutX="43.0" layoutY="116.0" prefHeight="279.0" prefWidth="257.0">
+                    <children>
+                        <VBox layoutX="10.0" layoutY="22.0" prefHeight="244.0" prefWidth="237.0">
+                            <children>
+                                <Pane fx:id="ID" prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label layoutX="14.0" layoutY="22.0" text="ID" />
+                                        <TextField fx:id="modifyProductIDTextField" layoutX="101.0" layoutY="18.0" prefHeight="25.0" prefWidth="122.0" />
+                                    </children>
+                                </Pane>
+                                <Pane fx:id="NAME" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label layoutX="14.0" layoutY="22.0" text="Name" />
+                                        <TextField fx:id="modifyProductNameTextField" layoutX="101.0" layoutY="18.0" prefHeight="25.0" prefWidth="122.0" />
+                                    </children>
+                                </Pane>
+                                <Pane fx:id="INVENTORY" layoutX="10.0" layoutY="132.0" prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label layoutX="14.0" layoutY="22.0" text="Inventory" />
+                                        <TextField fx:id="modifyProductInventoryTextField" layoutX="101.0" layoutY="18.0" prefHeight="25.0" prefWidth="122.0" />
+                                    </children>
+                                </Pane>
+                                <Pane fx:id="PRICE" layoutX="10.0" layoutY="172.0" prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label layoutX="14.0" layoutY="22.0" text="Price" />
+                                        <TextField fx:id="modifyProductPriceTextField" layoutX="101.0" layoutY="18.0" prefHeight="25.0" prefWidth="122.0" />
+                                    </children>
+                                </Pane>
+                                <Pane fx:id="MIN" layoutX="10.0" layoutY="193.0" prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label layoutX="14.0" layoutY="22.0" text="Min Inventory" />
+                                        <TextField fx:id="modifyProductMinTextField" layoutX="101.0" layoutY="18.0" prefHeight="25.0" prefWidth="122.0" />
+                                    </children>
+                                </Pane>
+                                <Pane fx:id="MAX" layoutX="10.0" layoutY="206.0" prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <Label layoutX="14.0" layoutY="22.0" text="Max Inventory" />
+                                        <TextField fx:id="modifyProductMaxTextField" layoutX="101.0" layoutY="18.0" prefHeight="25.0" prefWidth="122.0" />
+                                    </children>
+                                </Pane>
+                            </children>
+                        </VBox>
+                    </children>
+                </Pane>
+                <Button fx:id="modifyProductSaveButton" layoutX="57.0" layoutY="472.0" mnemonicParsing="false" text="Save" />
+                <Button fx:id="modifyProductCancelButton" layoutX="109.0" layoutY="472.0" mnemonicParsing="false" onAction="#modifyProductCancelButton" text="Cancel" />
+                <Button fx:id="modifyProductExitButton" layoutX="172.0" layoutY="472.0" mnemonicParsing="false" onAction="#modifyProductExitButton" text="Exit" />
+            </children>
+        </Pane>
+        <Pane fx:id="INV_PANES" layoutX="342.0" layoutY="53.0" prefHeight="511.0" prefWidth="432.0">
+            <children>
+                <VBox layoutX="16.0" layoutY="14.0" prefHeight="487.0" prefWidth="398.0">
+                    <children>
+                        <Pane fx:id="AVAILABLE" prefHeight="248.0" prefWidth="398.0">
+                            <children>
+                                <Label layoutX="23.0" layoutY="14.0" text="Available Parts">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <TextField fx:id="modifyProductAddPartTextField" layoutX="139.0" layoutY="10.0" prefHeight="25.0" prefWidth="245.0" promptText="Search by Part ID or Name" />
+                                <TableView fx:id="modifyProductAddPartTableView" layoutX="14.0" layoutY="39.0" prefHeight="174.0" prefWidth="367.0">
+                                    <columns>
+                                        <TableColumn fx:id="modifyProductAddPartIDColumn" prefWidth="75.0" text="Part ID" />
+                                        <TableColumn fx:id="modifyProductAddPartNameColumn" prefWidth="146.0" text="Part Name" />
+                                        <TableColumn fx:id="modifyProductAddPartInventoryColumn" prefWidth="76.0" text="Inventory" />
+                                        <TableColumn fx:id="modifyProductAddPartPriceColumn" minWidth="0.0" prefWidth="69.0" text="Price/Cost" />
+                                    </columns>
+                                </TableView>
+                                <Button fx:id="modifyProductAddPartAddButton" layoutX="343.0" layoutY="222.0" mnemonicParsing="false" text="Add" />
+                            </children>
+                        </Pane>
+                        <Pane fx:id="ASSOCIATED" layoutX="10.0" layoutY="10.0" prefHeight="248.0" prefWidth="398.0">
+                            <children>
+                                <Label layoutX="23.0" layoutY="14.0" text="Associated Parts">
+                                    <font>
+                                        <Font name="System Bold" size="12.0" />
+                                    </font>
+                                </Label>
+                                <TableView fx:id="modifyProductAssociatedPartTableView" layoutX="14.0" layoutY="39.0" prefHeight="174.0" prefWidth="367.0">
+                                    <columns>
+                                        <TableColumn fx:id="modifyProductAssociatedPartIDColumn" prefWidth="75.0" text="Part ID" />
+                                        <TableColumn fx:id="modifyProductAssociatedPartNameColumn" prefWidth="154.0" text="Part Name" />
+                                        <TableColumn fx:id="modifyProductAssociatedPartInventoryColumn" prefWidth="70.0" text="Inventory" />
+                                        <TableColumn fx:id="modifyProductAssociatedPartPriceColumn" prefWidth="67.0" text="Price/Cost" />
+                                    </columns>
+                                </TableView>
+                                <Button fx:id="modifyProductAssociatedPartRemoveButton" layoutX="322.0" layoutY="219.0" mnemonicParsing="false" text="Remove" />
+                            </children>
+                        </Pane>
+                    </children>
+                </VBox>
+            </children>
+        </Pane>
+    </children>
+</AnchorPane>

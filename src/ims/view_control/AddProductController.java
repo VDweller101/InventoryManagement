@@ -1,5 +1,7 @@
 package ims.view_control;
 
+import ims.model.Inventory;
+import ims.model.Product;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -84,9 +86,14 @@ public class AddProductController {
     private Button addProductAssociatedPartRemoveButton;
 
     @FXML
-    private void addProductExitButton(ActionEvent event)
+    private void addProductSaveButton (ActionEvent event)
     {
-        Utilities.ExitApplication(event);
+        Product product = createProductFromFields();
+        if (product != null) {
+            Inventory.addProduct(product);
+            System.out.println("Created new product with name: " + product.getName());
+            returnToMainMenu(event);
+        }
     }
 
     @FXML
@@ -98,6 +105,12 @@ public class AddProductController {
         if (result.get() == ButtonType.OK) {
             returnToMainMenu(event);
         }
+    }
+
+    @FXML
+    private void addProductExitButton(ActionEvent event)
+    {
+        Utilities.ExitApplication(event);
     }
 
     private void returnToMainMenu(ActionEvent event)
@@ -112,5 +125,35 @@ public class AddProductController {
         stage.setTitle("Inventory");
         stage.setScene(new Scene(root, 800, 400));
         stage.show();
+    }
+
+    private Product createProductFromFields ()
+    {
+        String message = "";
+        //int id, String name, double price, int stock, int min, int max
+        Integer id = Utilities.TryParseInt(addProductIDTextField.getText());
+        if (id == null) { message += "Product ID must be a valid integer and can not be blank.\n"; }
+        String name = addProductNameTextField.getText();
+        Double price = Utilities.TryParseDouble(addProductPriceTextField.getText());
+        if (price == null) { message += "Price must be a valid decimal number and can not be blank.\n"; }
+        Integer stock = Utilities.TryParseInt(addProductInventoryTextField.getText());
+        if (stock == null) { message += "Product stock level must be a valid integer value and must not be blank.\n"; }
+        Integer min = Utilities.TryParseInt(addProductMinTextField.getText());
+        if (min == null) { message += "Inventory minimum level must be a valid integer value and must not be blank.\n"; }
+        Integer max = Utilities.TryParseInt(addProductMaxTextField.getText());
+        if (max == null) { message += "Inventory maximum level must be a valid integer value and must not be blank.\n"; }
+
+        if (message.isBlank()) {
+            Product product = new Product (id, name, price, stock, min, max);
+            String errorMessage = Utilities.IsProductValid(product);
+            if (errorMessage.isBlank()) {
+                return product;
+            } else {
+                Utilities.DisplayErrorMessage("Product Creation Failure", errorMessage);
+            }
+        } else {
+            Utilities.DisplayErrorMessage("Product Creation Failure", message);
+        }
+        return null;
     }
 }
