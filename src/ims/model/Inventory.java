@@ -34,7 +34,7 @@ public class Inventory
     /*
     @return Looks through allProducts for the productID and returns any matches, otherwise returns null.
     */
-    public Product lookupProduct(int productId)
+    public static Product lookupProduct(int productId)
     {
         for (Product product:allProducts
              ) {

@@ -193,7 +193,10 @@ public class AddProductController {
         } else {
             if (Utilities.TryParseInt(searchString) != null) {
                 ObservableList<Part> part = FXCollections.observableArrayList();
-                part.add(Inventory.lookupPart(Utilities.TryParseInt(searchString)));
+                Part result = Inventory.lookupPart(Utilities.TryParseInt(searchString));
+                if (!associatedParts.contains(result)) {
+                    part.add(result);
+                }
                 addProductAddPartTableView.getItems().setAll(part);
             } else {
                 ObservableList<Part> matches = Inventory.lookupPart(searchString);
@@ -206,7 +209,7 @@ public class AddProductController {
                     ///////////////////////////////////////////////////////////
 
 
-                    if (!nonAssociatedParts.contains(part)) { searchResult.add(part); }
+                    if (!associatedParts.contains(part)) { searchResult.add(part); }
                 }
                 addProductAddPartTableView.getItems().setAll(searchResult);
             }

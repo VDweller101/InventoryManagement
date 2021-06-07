@@ -1,0 +1,13 @@
+GIT PUSH:
+Open git bash from main folder of project.
+//Check if commit is needed.
+-git status
+//Commit all files
+-git add --all
+//Check to see if desired files are selected
+-git status
+//Push commit to master branch.
+-git push origin master
+
+GIT PULL:
+-git pull

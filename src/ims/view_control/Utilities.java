@@ -1,10 +1,8 @@
 package ims.view_control;
 
-import ims.model.InHouse;
-import ims.model.Outsourced;
-import ims.model.Part;
-import ims.model.Product;
+import ims.model.*;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -110,56 +108,85 @@ public class Utilities
         Optional<ButtonType> result = alert.showAndWait();
     }
 
+    public static boolean DoesPartNameExist (String name)
+    {
+        if (Inventory.lookupPart(name).isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public static boolean DoesPartIDExist (int id)
+    {
+        if (Inventory.lookupPart(id) == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public static boolean DoesProductNameExist (String name)
+    {
+        if (Inventory.lookupProduct(name).isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public static boolean DoesProductIDExist (int id)
+    {
+        if (Inventory.lookupProduct(id) == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    public static boolean IsPartInAnyProducts(Part part)
+    {
+        ObservableList<Product> products = Inventory.getAllProducts();
+        for (Product product:products
+             ) {
+            if (product.getAllAssociatedParts().contains(part)) {
+                return true;
+            }
+        }
+        return false;
+    }
     public static String ArePartFieldsValid (Boolean type, String id, String name, String price, String stock, String min, String max, String machineCompany)
     {
         String message = "";
 
         //int id, String name, double price, int stock, int min, int max, String companyName
         Integer idVal = TryParseInt(id);
-        if (idVal == null) {
-            message += "ID must be a valid Integer.\n";
+        if (idVal == null) { message += "ID must be a valid Integer.\n"; }
+        else {
+            if (DoesPartIDExist(idVal)) { message += "Part ID already exists.\n"; }
         }
 
-        if (name.isBlank()) {
-            message += "Name must not be blank.\n";
-        }
+        if (name.isBlank()) { message += "Name must not be blank.\n"; }
+
+        if (DoesPartNameExist(name)) { message += "Part name already exists.\n"; }
 
         Double priceVal = TryParseDouble(price);
-        if (priceVal == null) {
-            message += "Price must be a valid decimal number.\n";
-        }
+        if (priceVal == null) { message += "Price must be a valid decimal number.\n"; }
 
         Integer stockVal = TryParseInt(stock);
-        if (stockVal == null) {
-            message += "Stock level must be a valid Integer.\n";
-        }
+        if (stockVal == null) { message += "Stock level must be a valid Integer.\n"; }
 
         Integer minVal = TryParseInt(min);
-        if (minVal == null) {
-            message += "Minimum Stock level must  be a valid integer.\n";
-        }
-
+        if (minVal == null) { message += "Minimum Stock level must  be a valid integer.\n"; }
         Integer maxVal = TryParseInt(max);
-        if (maxVal == null) {
-            message += "Maximum Stock level must be a valid Integer.\n";
-        }
+        if (maxVal == null) { message += "Maximum Stock level must be a valid Integer.\n"; }
+
         if (type) {
             Integer machineVal = TryParseInt(machineCompany);
-            if (machineVal == null) {
-                message += "MachineID must be a valid Integer.\n";
-            }
-        } else {
-            if (machineCompany.isBlank()) {
-                message += "Company Name must not be blank.\n";
-            }
+            if (machineVal == null) { message += "MachineID must be a valid Integer.\n"; }
+        }
+        else {
+            if (machineCompany.isBlank()) { message += "Company Name must not be blank.\n"; }
         }
         if (minVal != null && maxVal != null && stockVal != null) {
-            if (stockVal < minVal) {
-                message += "Stock level must be higher than minimum stock level.\n";
-            }
-            if (stockVal > maxVal) {
-                message += "Stock level must be lower than maximum stock level.\n";
-            }
+            if (stockVal < minVal) { message += "Stock level must be higher than minimum stock level.\n"; }
+            if (stockVal > maxVal) { message += "Stock level must be lower than maximum stock level.\n"; }
         }
 
         return message;
@@ -171,7 +198,9 @@ public class Utilities
         //int id, String name, double price, int stock, int min, int max
         Integer id = Utilities.TryParseInt(idString);
         if (id == null) { message += "Product ID must be a valid integer and can not be blank.\n"; }
+        if (DoesProductIDExist(id)) { message += "Product ID already exists.\n"; }
         String name = nameString;
+        if (DoesProductNameExist(name)) { message += "Product name already exists.\n"; }
         if (nameString.isBlank()) { message += "Product must have a valid Name.\n"; }
         Double price = Utilities.TryParseDouble(priceString);
         if (price == null) { message += "Price must be a valid decimal number and can not be blank.\n"; }

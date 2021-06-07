@@ -1,8 +1,6 @@
 package ims.view_control;
 
-import ims.model.Inventory;
-import ims.model.Part;
-import ims.model.Product;
+import ims.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -105,7 +103,9 @@ public class InventoryController {
         UpdatePartList();
         UpdateProductList();
         partsSearchField.textProperty().addListener(observable ->
-                UpdatePartList(partsSearchField.getText(), Inventory.lookupPart(partsSearchField.getText())));
+                UpdatePartList(partsSearchField.getText()));
+        productsSearchField.textProperty().addListener(observable ->
+                UpdateProductList(productsSearchField.getText()));
     }
 
     /*
@@ -139,10 +139,14 @@ public class InventoryController {
         if (Utilities.DisplayPrompt("Delete Part?", "Are you sure you want to delete the selected part? Deleted parts can not be recovered.") == true) {
             if (partsTableView.getSelectionModel().getSelectedItem() != null) {
                 Part selected = partsTableView.getSelectionModel().getSelectedItem();
-                if (Inventory.deletePart(selected) != true) {
-                    Utilities.DisplayErrorMessage("Failed Deletion", "The item deletion has failed.");
+                if (!Utilities.IsPartInAnyProducts(selected)) {
+                    if (Inventory.deletePart(selected) != true) {
+                        Utilities.DisplayErrorMessage("Failed Deletion", "The item deletion has failed.");
+                    } else {
+                        switchScene(4, event);
+                    }
                 } else {
-                    switchScene(4, event);
+                    Utilities.DisplayErrorMessage("Part in use.", "Can not delete part because it is used in 1 or more products.");
                 }
             } else {
                 Utilities.DisplayErrorMessage("Select Part", "You must select a part to delete.");
@@ -175,7 +179,7 @@ public class InventoryController {
         partsTableView.getItems().clear();
         partsTableView.getItems().setAll(Inventory.getAllParts());
     }
-    public void UpdatePartList(String searchString, ObservableList<Part> parts)
+    public void UpdatePartList(String searchString)
     {
         System.out.println("Updating Parts tableview from search string");
         if (searchString.isBlank()) {
@@ -196,8 +200,6 @@ public class InventoryController {
         }
     }
 
-    //public void UpdatePartList(int id, )
-
     private void initializePartTable()
     {
         System.out.println("Initializing part tableview");
@@ -216,6 +218,27 @@ public class InventoryController {
         productsTableView.getItems().clear();
         productsTableView.getItems().setAll(Inventory.getAllProducts());
 
+    }
+
+    public void UpdateProductList(String searchString)
+    {
+        System.out.println("Updating Products tableview from search string");
+        if (searchString.isBlank()) {
+            productsTableView.getItems().clear();
+            productsTableView.getItems().setAll(Inventory.getAllProducts());
+        } else {
+            if (Utilities.TryParseInt(searchString) != null) {
+                //Search by ID
+                productsTableView.getItems().clear();
+                ObservableList<Product> product = FXCollections.observableArrayList();
+                product.add(Inventory.lookupProduct(Utilities.TryParseInt(searchString)));
+                productsTableView.getItems().setAll(product);
+            } else {
+                //Search by Name
+                productsTableView.getItems().clear();
+                productsTableView.getItems().setAll(Inventory.lookupProduct(searchString));
+            }
+        }
     }
 
     private void initializeProductTable()
