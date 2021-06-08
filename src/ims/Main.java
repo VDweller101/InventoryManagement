@@ -29,28 +29,37 @@ public class Main extends Application {
 
     private void createDummyData()
     {
-        Part inHouse1 = new InHouse(0, "a", 1.0, 1, 1, 1, 1);
-        Part inHouse2 = new InHouse(1, "as", 1.0, 1, 1, 1, 1);
-        Part outsourced1 = new Outsourced(2, "asd", 1.0, 1, 1, 1, "Company1");
-        Part outsourced2 = new Outsourced(3, "ads", 1.0, 1, 1, 1, "Company2");
+        Part screw = new InHouse(0, "Screw", 1.0, 1, 1, 1, 1);
+        Part nut = new InHouse(1, "Nut", 1.0, 1, 1, 1, 2);
+        Part washer = new InHouse(2, "Washer", 1.0, 1, 1, 1, 3);
+        Part rod = new InHouse(3, "Rod", 1.0, 1, 1, 1, 4);
+        Part rubberWheel = new Outsourced(4, "Rubber Wheel", 1.0, 1, 1, 1, "Wheels R Us");
+        Part paint = new Outsourced (5, "Bicycle Paint", 1.0, 1, 1, 1, "PaintWorld");
 
-        Inventory.addPart(inHouse1);
-        Inventory.addPart(inHouse2);
-        Inventory.addPart(outsourced1);
-        Inventory.addPart(outsourced2);
+        Inventory.addPart(screw);
+        Inventory.addPart(nut);
+        Inventory.addPart(washer);
+        Inventory.addPart(rod);
+        Inventory.addPart(rubberWheel);
+        Inventory.addPart(paint);
 
-        Product product1 = new Product(0, "a", 1.0, 1, 1, 1);
-        product1.addAssociatedPart(inHouse1);
-        product1.addAssociatedPart(inHouse2);
-        product1.addAssociatedPart(outsourced1);
+        Product bikeWheel = new Product(0, "Bicycle Wheel", 1.0, 1, 1, 1);
+        bikeWheel.addAssociatedPart(screw);
+        bikeWheel.addAssociatedPart(nut);
+        bikeWheel.addAssociatedPart(washer);
+        bikeWheel.addAssociatedPart(rod);
+        bikeWheel.addAssociatedPart(rubberWheel);
 
 
-        Product product2 = new Product(1, "ad", 1.0, 1, 1, 1);
-        product2.addAssociatedPart(inHouse1);
-        product2.addAssociatedPart(outsourced2);
+        Product bikeFrame = new Product(1, "Bicycle Frame", 1.0, 1, 1, 1);
+        bikeFrame.addAssociatedPart(screw);
+        bikeFrame.addAssociatedPart(nut);
+        bikeFrame.addAssociatedPart(washer);
+        bikeFrame.addAssociatedPart(rod);
+        bikeFrame.addAssociatedPart(rubberWheel);
 
-        Inventory.addProduct(product1);
-        Inventory.addProduct(product2);
+        Inventory.addProduct(bikeWheel);
+        Inventory.addProduct(bikeFrame);
     }
 
     public static void main(String[] args) {

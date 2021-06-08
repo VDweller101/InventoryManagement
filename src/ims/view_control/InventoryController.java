@@ -136,8 +136,8 @@ public class InventoryController {
     @FXML
     private void partsDeleteButton(ActionEvent event) throws IOException
     {
-        if (Utilities.DisplayPrompt("Delete Part?", "Are you sure you want to delete the selected part? Deleted parts can not be recovered.") == true) {
-            if (partsTableView.getSelectionModel().getSelectedItem() != null) {
+        if (partsTableView.getSelectionModel().getSelectedItem() != null) {
+            if (Utilities.DisplayPrompt("Delete Part?", "Are you sure you want to delete the selected part? Deleted parts can not be recovered.") == true) {
                 Part selected = partsTableView.getSelectionModel().getSelectedItem();
                 if (!Utilities.IsPartInAnyProducts(selected)) {
                     if (Inventory.deletePart(selected) != true) {
@@ -146,11 +146,15 @@ public class InventoryController {
                         switchScene(4, event);
                     }
                 } else {
-                    Utilities.DisplayErrorMessage("Part in use.", "Can not delete part because it is used in 1 or more products.");
+                    String errorMessage = "Can not delete part because it is used in 1 or more products.\n The following products contain this part:\n\n";
+                    for (Product pro : Utilities.GetAllProductsContainingPart(selected)) {
+                        errorMessage += pro.getName() + "\n";
+                    }
+                    Utilities.DisplayErrorMessage("Part in use.", errorMessage);
                 }
-            } else {
-                Utilities.DisplayErrorMessage("Select Part", "You must select a part to delete.");
             }
+        } else {
+            Utilities.DisplayErrorMessage("Select Part", "You must select a part to delete.");
         }
     }
 
@@ -162,7 +166,30 @@ public class InventoryController {
 
     @FXML
     private void productsModifyButton (ActionEvent event) throws IOException {
-        switchScene(3, event);
+        if (productsTableView.getSelectionModel().getSelectedItem() != null) {
+            Utilities.CurrentSelectedProduct = productsTableView.getSelectionModel().getSelectedItem();
+            switchScene(3, event);
+        } else {
+            Utilities.DisplayErrorMessage("Select Item", "Please select a Product to modify.");
+        }
+    }
+
+    @FXML
+    private void productsDeleteButton (ActionEvent event) throws IOException {
+        if (productsTableView.getSelectionModel().getSelectedItem() != null)
+        {
+            if (Utilities.DisplayPrompt("Delete Product?", "Are you sure you want to delete the selected product? Deleted products can not be recovered.") == true)
+            {
+                Product selected = productsTableView.getSelectionModel().getSelectedItem();
+                if (Inventory.deleteProduct(selected)) {
+                    switchScene(4, event);
+                } else {
+                    Utilities.DisplayErrorMessage("Failed Deletion", "The item deletion has failed.");
+                }
+            }
+        } else {
+            Utilities.DisplayErrorMessage("Select Part", "You must select a part to delete.");
+        }
     }
 
     // Check if user actually wants to quit.

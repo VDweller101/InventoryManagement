@@ -2,6 +2,7 @@ package ims.view_control;
 
 import ims.model.*;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -215,4 +216,12 @@ public class Utilities
         return message;
     }
 
+    public static ObservableList<Product> GetAllProductsContainingPart (Part part) {
+        ObservableList<Product> products = FXCollections.observableArrayList();
+        for (Product pro : Inventory.getAllProducts()
+        ) {
+            if (pro.getAllAssociatedParts().contains(part)) { products.add(pro); }
+        }
+        return products;
+    }
 }

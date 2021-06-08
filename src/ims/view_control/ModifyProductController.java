@@ -1,5 +1,6 @@
 package ims.view_control;
 
+import ims.model.Product;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +17,8 @@ import java.util.Optional;
 
 public class ModifyProductController {
 
+    private Product currentSelectedProduct;
+    private Product currentModifiedProduct;
     @FXML
     private TextField modifyProductIDTextField;
 

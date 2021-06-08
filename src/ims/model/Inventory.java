@@ -122,7 +122,7 @@ public class Inventory
     /*
     @return Attempts to find and delete a product. Returns boolean if successful (true) or not (false)
      */
-    public boolean deleteProduct (Product selectedProduct)
+    public static boolean deleteProduct (Product selectedProduct)
     {
         if (allProducts.contains(selectedProduct))
         {
