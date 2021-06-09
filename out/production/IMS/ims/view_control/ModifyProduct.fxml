@@ -88,7 +88,7 @@
                                         <TableColumn fx:id="modifyProductAddPartPriceColumn" minWidth="0.0" prefWidth="69.0" text="Price/Cost" />
                                     </columns>
                                 </TableView>
-                                <Button fx:id="modifyProductAddPartAddButton" layoutX="343.0" layoutY="222.0" mnemonicParsing="false" text="Add" />
+                                <Button fx:id="modifyProductAddPartAddButton" layoutX="343.0" layoutY="222.0" mnemonicParsing="false" onAction="#modifyProductAddPartAddButton" text="Add" />
                             </children>
                         </Pane>
                         <Pane fx:id="ASSOCIATED" layoutX="10.0" layoutY="10.0" prefHeight="248.0" prefWidth="398.0">
@@ -106,7 +106,7 @@
                                         <TableColumn fx:id="modifyProductAssociatedPartPriceColumn" prefWidth="67.0" text="Price/Cost" />
                                     </columns>
                                 </TableView>
-                                <Button fx:id="modifyProductAssociatedPartRemoveButton" layoutX="322.0" layoutY="219.0" mnemonicParsing="false" text="Remove" />
+                                <Button fx:id="modifyProductAssociatedPartRemoveButton" layoutX="322.0" layoutY="219.0" mnemonicParsing="false" onAction="#modifyProductAssociatedPartRemoveButton" text="Remove" />
                             </children>
                         </Pane>
                     </children>

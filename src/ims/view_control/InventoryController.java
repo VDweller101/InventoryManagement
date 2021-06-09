@@ -96,7 +96,6 @@ public class InventoryController {
 
     public void initialize ()
     {
-        System.out.println("Initializing InventoryController.");
         initializePartTable();
         initializeProductTable();
 
@@ -201,14 +200,12 @@ public class InventoryController {
 
     public void UpdatePartList()
     {
-        System.out.println("Refreshing Parts tableview");
         partsTableView.getSelectionModel().clearSelection();
         partsTableView.getItems().clear();
         partsTableView.getItems().setAll(Inventory.getAllParts());
     }
     public void UpdatePartList(String searchString)
     {
-        System.out.println("Updating Parts tableview from search string");
         if (searchString.isBlank()) {
             partsTableView.getItems().clear();
             partsTableView.getItems().setAll(Inventory.getAllParts());
@@ -229,7 +226,6 @@ public class InventoryController {
 
     private void initializePartTable()
     {
-        System.out.println("Initializing part tableview");
         partsIDColumn.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
         partsNameColumn.setCellValueFactory(new PropertyValueFactory<Part, String>("name"));
         partsInventoryColumn.setCellValueFactory(new PropertyValueFactory<Part, Integer>("stock"));
@@ -240,7 +236,6 @@ public class InventoryController {
 
     public void UpdateProductList()
     {
-        System.out.println("Refreshing Products tableview");
         productsTableView.getSelectionModel().clearSelection();
         productsTableView.getItems().clear();
         productsTableView.getItems().setAll(Inventory.getAllProducts());
@@ -249,7 +244,6 @@ public class InventoryController {
 
     public void UpdateProductList(String searchString)
     {
-        System.out.println("Updating Products tableview from search string");
         if (searchString.isBlank()) {
             productsTableView.getItems().clear();
             productsTableView.getItems().setAll(Inventory.getAllProducts());

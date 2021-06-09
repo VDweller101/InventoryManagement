@@ -56,7 +56,6 @@ public class Main extends Application {
         bikeFrame.addAssociatedPart(nut);
         bikeFrame.addAssociatedPart(washer);
         bikeFrame.addAssociatedPart(rod);
-        bikeFrame.addAssociatedPart(rubberWheel);
 
         Inventory.addProduct(bikeWheel);
         Inventory.addProduct(bikeFrame);
