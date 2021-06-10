@@ -63,7 +63,7 @@
                         </VBox>
                     </children>
                 </Pane>
-                <Button fx:id="modifyProductSaveButton" layoutX="57.0" layoutY="472.0" mnemonicParsing="false" text="Save" />
+                <Button fx:id="modifyProductSaveButton" layoutX="57.0" layoutY="472.0" mnemonicParsing="false" onAction="#modifyProductSaveButton" text="Save" />
                 <Button fx:id="modifyProductCancelButton" layoutX="109.0" layoutY="472.0" mnemonicParsing="false" onAction="#modifyProductCancelButton" text="Cancel" />
                 <Button fx:id="modifyProductExitButton" layoutX="172.0" layoutY="472.0" mnemonicParsing="false" onAction="#modifyProductExitButton" text="Exit" />
             </children>

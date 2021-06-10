@@ -91,6 +91,40 @@ public class ModifyProductController {
     private Button modifyProductAssociatedPartRemoveButton;
 
     @FXML
+    void modifyProductSaveButton ()
+    {
+        String validationMessage = Utilities.AreProductFieldsValid(
+                modifyProductIDTextField.getText(),
+                modifyProductNameTextField.getText(),
+                modifyProductPriceTextField.getText(),
+                modifyProductInventoryTextField.getText(),
+                modifyProductMinTextField.getText(),
+                modifyProductMaxTextField.getText(),
+                currentProductAssociatedParts.size());
+        if (validationMessage.isBlank()) {
+            Product newProduct = createProductFromFields();
+            if (newProduct == null){
+                Utilities.DisplayErrorMessage("Fail", "Fail");
+            } else {
+                Inventory.updateProduct(Inventory.getAllProducts().indexOf(currentSelectedProduct), newProduct);
+            }
+        } else {
+            Utilities.DisplayErrorMessage("Product Modification Failed.", validationMessage);
+        }
+
+
+    /*
+        Check if fields are valid
+
+        Check if name or ID are taken
+
+        Create Product
+
+        Update product in Inventory
+         */
+    }
+
+    @FXML
     void modifyProductCancelButton(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "All unsaved changes will be lost.");
         alert.initModality(Modality.APPLICATION_MODAL);
@@ -126,6 +160,44 @@ public class ModifyProductController {
         }
     }
 
+    private Product createProductFromFields ()
+    {
+        Boolean productValid = true;
+        Integer id = Utilities.TryParseInt(modifyProductAddPartIDColumn.getText());
+        if (id == null) {
+            productValid = false;
+        }
+        String name = modifyProductAddPartNameColumn.getText();
+        Double price = Utilities.TryParseDouble(modifyProductPriceTextField.getText());
+        if (price == null) {
+            productValid = false;
+        }
+        Integer stock = Utilities.TryParseInt(modifyProductInventoryTextField.getText());
+        if (stock == null) {
+            productValid = false;
+        }
+        Integer min = Utilities.TryParseInt(modifyProductMinTextField.getText());
+        if (min == null) {
+            productValid = false;
+        }
+        Integer max = Utilities.TryParseInt(modifyProductMaxTextField.getText());
+        if (max == null) {
+            productValid = false;
+        }
+
+        if (productValid) {
+            Product product = new Product (id, name, price, stock, min, max);
+            for (Part part:currentProductAssociatedParts
+            ) {
+                product.addAssociatedPart(part);
+            }
+            return product;
+        } else {
+            Utilities.DisplayErrorMessage("Fail", "Product modification failed.");
+            return null;
+        }
+    }
+
     private void returnToMainMenu(ActionEvent event)
     {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -156,7 +228,7 @@ public class ModifyProductController {
         modifyProductIDTextField.setText(String.valueOf(product.getId()));
         modifyProductNameTextField.setText(product.getName());
         modifyProductPriceTextField.setText(String.valueOf(product.getPrice()));
-        modifyProductInventoryTextField.setText(String.valueOf(product.getPrice()));
+        modifyProductInventoryTextField.setText(String.valueOf(product.getStock()));
         modifyProductMinTextField.setText(String.valueOf(product.getMin()));
         modifyProductMaxTextField.setText(String.valueOf(product.getMax()));
     }
