@@ -203,12 +203,6 @@ public class AddProductController {
                 ObservableList<Part> searchResult = FXCollections.observableArrayList();
                 for (Part part: matches
                      ) {
-
-                    ///////////////////////////////////////////////////////////
-                    //TODO FIX THE PROBLEM WITH SEARCH NOT WORKING FOR NAMES!//
-                    ///////////////////////////////////////////////////////////
-
-
                     if (!associatedParts.contains(part)) { searchResult.add(part); }
                 }
                 addProductAddPartTableView.getItems().setAll(searchResult);
@@ -229,7 +223,14 @@ public class AddProductController {
                 associatedParts.size());
         //int id, String name, double price, int stock, int min, int max
         Integer id = Utilities.TryParseInt(addProductIDTextField.getText());
+        if (!isIDAvailable(id)) {
+            Utilities.DisplayErrorMessage("ID Not Available.", "The item ID is already used by another Product.");
+            return null;
+        }
         String name = addProductNameTextField.getText();
+        if (!isNameAvailable(name)) {
+            Utilities.DisplayErrorMessage("Name Not Available.", "The item name is already used by another Product.");
+        }
         Double price = Utilities.TryParseDouble(addProductPriceTextField.getText());
         Integer stock = Utilities.TryParseInt(addProductInventoryTextField.getText());
         Integer min = Utilities.TryParseInt(addProductMinTextField.getText());
@@ -265,5 +266,25 @@ public class AddProductController {
         stage.setTitle("Inventory");
         stage.setScene(new Scene(root, 800, 400));
         stage.show();
+    }
+    private Boolean isNameAvailable (String name)
+    {
+        for (Product pro:Inventory.getAllProducts()
+             ) {
+            if(pro.getName().compareTo(name) == 0){
+                return false;
+            }
+        }
+        return true;
+    }
+    private Boolean isIDAvailable (int ID)
+    {
+        for (Product pro:Inventory.getAllProducts()
+             ) {
+            if (pro.getId() == ID) {
+                return false;
+            }
+        }
+        return true;
     }
 }

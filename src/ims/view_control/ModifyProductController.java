@@ -91,7 +91,7 @@ public class ModifyProductController {
     private Button modifyProductAssociatedPartRemoveButton;
 
     @FXML
-    void modifyProductSaveButton ()
+    void modifyProductSaveButton (ActionEvent event)
     {
         String validationMessage = Utilities.AreProductFieldsValid(
                 modifyProductIDTextField.getText(),
@@ -103,25 +103,13 @@ public class ModifyProductController {
                 currentProductAssociatedParts.size());
         if (validationMessage.isBlank()) {
             Product newProduct = createProductFromFields();
-            if (newProduct == null){
-                Utilities.DisplayErrorMessage("Fail", "Fail");
-            } else {
+            if (newProduct != null){
                 Inventory.updateProduct(Inventory.getAllProducts().indexOf(currentSelectedProduct), newProduct);
+                returnToMainMenu(event);
             }
         } else {
             Utilities.DisplayErrorMessage("Product Modification Failed.", validationMessage);
         }
-
-
-    /*
-        Check if fields are valid
-
-        Check if name or ID are taken
-
-        Create Product
-
-        Update product in Inventory
-         */
     }
 
     @FXML
@@ -159,45 +147,62 @@ public class ModifyProductController {
             Utilities.DisplayErrorMessage("Select Part", "Please select part to remove.");
         }
     }
-
-    private Product createProductFromFields ()
-    {
-        Boolean productValid = true;
-        Integer id = Utilities.TryParseInt(modifyProductAddPartIDColumn.getText());
-        if (id == null) {
-            productValid = false;
-        }
-        String name = modifyProductAddPartNameColumn.getText();
-        Double price = Utilities.TryParseDouble(modifyProductPriceTextField.getText());
-        if (price == null) {
-            productValid = false;
-        }
-        Integer stock = Utilities.TryParseInt(modifyProductInventoryTextField.getText());
-        if (stock == null) {
-            productValid = false;
-        }
-        Integer min = Utilities.TryParseInt(modifyProductMinTextField.getText());
-        if (min == null) {
-            productValid = false;
-        }
-        Integer max = Utilities.TryParseInt(modifyProductMaxTextField.getText());
-        if (max == null) {
-            productValid = false;
-        }
-
-        if (productValid) {
-            Product product = new Product (id, name, price, stock, min, max);
-            for (Part part:currentProductAssociatedParts
-            ) {
-                product.addAssociatedPart(part);
-            }
-            return product;
-        } else {
-            Utilities.DisplayErrorMessage("Fail", "Product modification failed.");
+    private Product createProductFromFields () {
+        Integer id = Utilities.TryParseInt(modifyProductIDTextField.getText());
+        if (!isIDAvailable(id)) {
+            Utilities.DisplayErrorMessage("ID Not Available.", "This ID is already taken by another Product.");
             return null;
         }
-    }
+        String name = modifyProductNameTextField.getText();
+        if (!isNameAvailable(name)) {
+            Utilities.DisplayErrorMessage("Name Not Available.", "This name is already taken by another Product.");
+            return null;
+        }
+        Double price = Utilities.TryParseDouble(modifyProductPriceTextField.getText());
+        Integer stock = Utilities.TryParseInt(modifyProductInventoryTextField.getText());
+        Integer min = Utilities.TryParseInt(modifyProductMinTextField.getText());
+        Integer max = Utilities.TryParseInt(modifyProductMaxTextField.getText());
 
+        Product product = new Product(id, name, price, stock, min, max);
+        for (Part part : currentProductAssociatedParts
+        ) {
+            product.addAssociatedPart(part);
+        }
+        return product;
+    }
+    public void initialize()
+    {
+        currentSelectedProduct = Utilities.CurrentSelectedProduct;
+        populateFields(currentSelectedProduct);
+        for (Part part:currentSelectedProduct.getAllAssociatedParts()
+             ) {
+            currentProductAssociatedParts.add(part);
+        }
+        initializeTableViews();
+    }
+    private void populateFields (Product product)
+    {
+        modifyProductIDTextField.setText(String.valueOf(product.getId()));
+        modifyProductNameTextField.setText(product.getName());
+        modifyProductPriceTextField.setText(String.valueOf(product.getPrice()));
+        modifyProductInventoryTextField.setText(String.valueOf(product.getStock()));
+        modifyProductMinTextField.setText(String.valueOf(product.getMin()));
+        modifyProductMaxTextField.setText(String.valueOf(product.getMax()));
+    }
+    private ObservableList<Part> getAvailableParts ()
+    {
+        ObservableList<Part> parts = FXCollections.observableArrayList();
+        for (Part part:Inventory.getAllParts()
+             ) {
+            if (!currentProductAssociatedParts.contains(part)){ parts.add(part); }
+        }
+        return parts;
+    }
+    private void updateTableViews()
+    {
+        modifyProductAssociatedPartTableView.getItems().setAll(currentProductAssociatedParts);
+        modifyProductAddPartTableView.getItems().setAll(getAvailableParts());
+    }
     private void returnToMainMenu(ActionEvent event)
     {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -211,28 +216,6 @@ public class ModifyProductController {
         stage.setScene(new Scene(root, 800, 400));
         stage.show();
     }
-
-    public void initialize()
-    {
-        currentSelectedProduct = Utilities.CurrentSelectedProduct;
-        populateFields(currentSelectedProduct);
-        for (Part part:currentSelectedProduct.getAllAssociatedParts()
-             ) {
-            currentProductAssociatedParts.add(part);
-        }
-        initializeTableViews();
-    }
-    private void populateFields (Product product)
-    {
-        //id, name, price, stock, min, max, parts
-        modifyProductIDTextField.setText(String.valueOf(product.getId()));
-        modifyProductNameTextField.setText(product.getName());
-        modifyProductPriceTextField.setText(String.valueOf(product.getPrice()));
-        modifyProductInventoryTextField.setText(String.valueOf(product.getStock()));
-        modifyProductMinTextField.setText(String.valueOf(product.getMin()));
-        modifyProductMaxTextField.setText(String.valueOf(product.getMax()));
-    }
-
     private void initializeTableViews()
     {
         //Initialize Add Part Tableview
@@ -251,20 +234,24 @@ public class ModifyProductController {
 
         modifyProductAssociatedPartTableView.getItems().setAll(currentProductAssociatedParts);
     }
-
-    private ObservableList<Part> getAvailableParts ()
+    private Boolean isNameAvailable(String name)
     {
-        ObservableList<Part> parts = FXCollections.observableArrayList();
-        for (Part part:Inventory.getAllParts()
+        for (Product pro:Inventory.getAllProducts()
              ) {
-            if (!currentProductAssociatedParts.contains(part)){ parts.add(part); }
+            if (pro.getName().compareTo(name) == 0 && pro.getName().compareTo(currentSelectedProduct.getName()) != 0) {
+                return false;
+            }
         }
-        return parts;
+        return true;
     }
-
-    private void updateTableViews()
+    private Boolean isIDAvailable (int ID)
     {
-        modifyProductAssociatedPartTableView.getItems().setAll(currentProductAssociatedParts);
-        modifyProductAddPartTableView.getItems().setAll(getAvailableParts());
+        for (Product pro:Inventory.getAllProducts()
+             ) {
+            if (pro.getId() == ID && pro != currentSelectedProduct) {
+                return false;
+            }
+        }
+        return true;
     }
 }

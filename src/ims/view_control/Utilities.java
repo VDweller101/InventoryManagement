@@ -199,9 +199,7 @@ public class Utilities
         //int id, String name, double price, int stock, int min, int max
         Integer id = Utilities.TryParseInt(idString);
         if (id == null) { message += "Product ID must be a valid integer and can not be blank.\n"; }
-        if (DoesProductIDExist(id)) { message += "Product ID already exists.\n"; }
         String name = nameString;
-        if (DoesProductNameExist(name)) { message += "Product name already exists.\n"; }
         if (nameString.isBlank()) { message += "Product must have a valid Name.\n"; }
         Double price = Utilities.TryParseDouble(priceString);
         if (price == null) { message += "Price must be a valid decimal number and can not be blank.\n"; }
