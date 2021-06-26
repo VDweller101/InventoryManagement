@@ -8,18 +8,28 @@ public class Inventory
     private static ObservableList<Part> allParts = FXCollections.observableArrayList();
     private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
 
+    /**
+     * Adds a part to the array of all parts.
+     * @param part The part to add.
+     */
     public static void addPart (Part part)
     {
         allParts.add(part);
     }
 
+    /**
+     * Adds a product to the array of all products.
+     * @param product The product to add.
+     */
     public static void addProduct(Product product)
     {
         allProducts.add(product);
     }
 
-    /*
-    @return Looks through allParts for the partID and returns any matches, otherwise returns null.
+    /**
+     * Looks through allParts for the partID and returns any matches, otherwise returns null.
+     * @param partId The part ID to search for.
+     * @return Found part matching ID param, otherwise null.
      */
     public static Part lookupPart (int partId)
     {
@@ -31,9 +41,11 @@ public class Inventory
         return null;
     }
 
-    /*
-    @return Looks through allProducts for the productID and returns any matches, otherwise returns null.
-    */
+    /**
+     * Looks through allProducts for the productID and returns any matches, otherwise returns null.
+     * @param productId The product ID to search for.
+     * @return Found product matching ID param, otherwise null.
+     */
     public static Product lookupProduct(int productId)
     {
         for (Product product:allProducts
@@ -43,8 +55,10 @@ public class Inventory
         return null;
     }
 
-    /*
-    @return Looks through allParts for the partName and returns any matches, otherwise returns null.
+    /**
+     * Looks through allParts for the partName and returns any matches, otherwise returns null.
+     * @param partName The part name to search for.
+     * @return The part(s) that match the search string. Will return empty list if no matches found.
      */
     public static ObservableList<Part> lookupPart (String partName)
     {
@@ -68,9 +82,11 @@ public class Inventory
         }
     }
 
-    /*
-    @return Looks through allProducts for the productName and returns any matches, otherwise returns null.
-    */
+    /**
+     * Looks through allProducts for the productName and returns any matches, otherwise returns empty array.
+     * @param productName The product name to search for.
+     * @return The Product(s) that match the search string given. If no matches are found, will return an empty list.
+     */
     public static ObservableList<Product> lookupProduct(String productName)
     {
         if (productName.isBlank()) { return allProducts; }
@@ -91,20 +107,30 @@ public class Inventory
         }
     }
 
-    // Deletes the old part and adds the new one. Will display message to console if unsuccessful
+    /**
+     * Deletes the old part and adds the new one.
+     * @param index The index value of the part to be updated.
+     * @param selectedPart The updated part that will replace the part at index given.
+     */
     public static void updatePart (int index, Part selectedPart)
     {
         allParts.set(index, selectedPart);
     }
 
-    // Deletes the old product and adds the new one. Will display message to console if unsuccessful
+    /**
+     * Deletes the old product and adds the new one.
+     * @param index The index value of the product to be updated.
+     * @param newProduct The updated product that will replace the product at index given.
+     */
     public static void updateProduct (int index, Product newProduct)
     {
         allProducts.set(index, newProduct);
     }
 
-    /*
-    @return Attempts to find and delete a part. Returns boolean if successful (true) or not (false)
+    /**
+     * Attempts to find and delete a part. Returns boolean if successful (true) or not (false)
+     * @param selectedPart The part to delete
+     * @return Returns true if deletion successful, else false.
      */
     public static boolean deletePart(Part selectedPart)
     {
@@ -119,8 +145,10 @@ public class Inventory
         }
     }
 
-    /*
-    @return Attempts to find and delete a product. Returns boolean if successful (true) or not (false)
+    /**
+     * Attempts to find and delete a product. Returns boolean if successful (true) or not (false)
+     * @param selectedProduct The product to delete
+     * @return Returns true if deletion successful, else false.
      */
     public static boolean deleteProduct (Product selectedProduct)
     {
@@ -134,16 +162,18 @@ public class Inventory
         }
     }
 
-    /*
-    @return Returns the ObservableList of allParts.
+    /**
+     * Get list of all parts in inventory.
+     * @return List of all parts.
      */
     public static ObservableList<Part> getAllParts()
     {
         return allParts;
     }
 
-    /*
-    @return Returns the ObservableList of allProducts.
+    /**
+     * Get list of all products in inventory.
+     * @return List of all products.
      */
     public static ObservableList<Product> getAllProducts()
     {

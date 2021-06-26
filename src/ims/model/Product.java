@@ -13,8 +13,15 @@ public class Product {
     private int max;
     private ObservableList<Part> associatedParts;
 
-    /*
-    ////    Constructor
+    /**
+     * --Product Constructor--
+     * @param id the id to set
+     * @param name the name to set
+     * @param price the price to set
+     * @param stock the stock level to set
+     * @param min  the min to set
+     * @param max the max to set
+     * @return the newly created product
      */
     public Product (int id, String name, double price, int stock, int min, int max)
     {
@@ -27,55 +34,88 @@ public class Product {
         associatedParts = FXCollections.observableArrayList();
     }
 
-    /*
-    ////    Setters
+    /**
+     * @param id the id to set
      */
     public void setID (int id) {
         this.id = id;
     }
+    /**
+     * @param name the name to set
+     */
     public void setName (String name) { this.name = name; }
+    /**
+     * @param price the price to set
+     */
     public void setPrice (double price) { this.price = price; }
+    /**
+     * @param stock the stock level to set
+     */
     public void setStock (int stock) {
         this.stock = stock;
     }
+    /**
+     * @param min the min to set
+     */
     public void setMin (int min) {
         this.min = min;
     }
+    /**
+     * @param max the max to set
+     */
     public void setMax (int max) {
         this.max = max;
     }
 
-    /*
-    ////    Getters
-    */
+    /**
+     * @return the id
+     */
     public int getId () {
         return id;
     }
+    /**
+     * @return the name
+     */
     public String getName () {
         return name;
     }
+    /**
+     * @return the price
+     */
     public double getPrice () {
         return price;
     }
+    /**
+     * @return the stock level
+     */
     public int getStock () {
         return stock;
     }
+    /**
+     * @return the minimum stock level
+     */
     public int getMin () {
         return min;
     }
+    /**
+     * @return the maximum stock level
+     */
     public int getMax () {
         return max;
     }
 
 
-    /*
-    ////    Part Management
-    */
-
-    //Add part to associatedParts list of product.
+    /**
+     * Adds a part to the associated parts array.
+     * @param part The part to add.
+     */
     public void addAssociatedPart(Part part) { associatedParts.add(part); }
 
-    //Delete associated part from products part list. Check if the part is within the associatedParts list. Return true if deletion successful.
+    /**
+     * Delete associated part. If operation is successful, return true, else false.
+     * @param part The part to delete
+     * @return Will return true if deletion successful, otherwise false.
+     */
     public boolean deleteAssociatedPart (Part part) {
         if(associatedParts.contains(part))
         {
@@ -86,6 +126,9 @@ public class Product {
         }
     }
 
-    //Return list of parts associated with product.
+    /**
+     * Get all associated parts.
+     * @return An observable list of Parts
+     */
     public ObservableList<Part> getAllAssociatedParts() { return associatedParts; }
 }

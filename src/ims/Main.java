@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import javax.swing.text.TableView;
+import java.io.IOException;
 
 public class Main extends Application {
 
@@ -17,8 +18,13 @@ public class Main extends Application {
     @FXML
     public static TableView ProductTable;
 
+    /**
+     * Overridden start function. Sets stage
+     * @param primaryStage The primary stage of the app.
+     * @throws IOException Throws IOException if Stage can not be found.
+     */
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws IOException {
         createDummyData();
 
         Parent root = FXMLLoader.load(getClass().getResource("view_control/Inventory.fxml"));

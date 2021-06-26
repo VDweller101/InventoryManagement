@@ -88,7 +88,7 @@
                               <TableColumn fx:id="addProductAddPartPriceColumn" minWidth="0.0" prefWidth="69.0" text="Price/Cost" />
                           </columns>
                         </TableView>
-                        <Button fx:id="addProductAddPartAddButton" layoutX="343.0" layoutY="222.0" mnemonicParsing="false" onAction="#setAddProductAddPartAddButton" text="Add" />
+                        <Button fx:id="addProductAddPartAddButton" layoutX="343.0" layoutY="222.0" mnemonicParsing="false" onAction="#addProductAddPartAddButton" text="Add" />
                      </children>
                   </Pane>
                   <Pane fx:id="ASSOCIATED" layoutX="10.0" layoutY="10.0" prefHeight="248.0" prefWidth="398.0">

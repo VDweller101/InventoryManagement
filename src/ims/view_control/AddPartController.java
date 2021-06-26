@@ -13,8 +13,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static java.lang.Integer.*;
@@ -60,10 +63,10 @@ public class AddPartController {
     @FXML
     private TextField addPartMachineCompanyTextField;
 
-    /*
-    ////    Radio Group
+    /**
+     * Event listener to check if the toggle for InHouse vs Outsourced has changed.
+     * @param event The event that triggered the method.
      */
-
     @FXML
     private void addPartToggleChanged(ActionEvent event)
     {
@@ -76,9 +79,7 @@ public class AddPartController {
         }
     }
 
-    /*
-    ////    Save/Cancel/Exit Buttons
-    */
+
     @FXML
     private Button addPartSaveButton;
 
@@ -88,10 +89,11 @@ public class AddPartController {
     @FXML
     private Button exitButton;
 
-    /*
-    ////    Save/Cancel/Exit Button Actions
-     */
 
+    /**
+     * Checks if all fields are valid. If they are, add new part, else display error message.
+     * @param event The event that triggered the method.
+     */
     @FXML
     private void addPartSaveButton (ActionEvent event)
     {
@@ -125,6 +127,11 @@ public class AddPartController {
         }
     }
 
+    /**
+     * Check if user wants to cancel part creation. If yes, return to main menu.
+     * @param event The event that called the method.
+     * @throws IOException Throws if the returnToMainMenu fails to properly load a scene.
+     */
     @FXML
     private void addPartCancelButton(ActionEvent event) throws IOException
     {
@@ -137,12 +144,20 @@ public class AddPartController {
         }
     }
 
+    /**
+     * Calls to Utilities to handle application exit.
+     * @param event The event that called the method.
+     */
     @FXML
     private void addPartExitButton (ActionEvent event)
     {
         Utilities.ExitApplication(event);
     }
 
+    /**
+     * Returns to main menu.
+     * @param event The event that called the method.
+     */
     private void returnToMainMenu(ActionEvent event)
     {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -157,6 +172,12 @@ public class AddPartController {
         stage.show();
     }
 
+    /**
+     * Checks every text field to make sure the content is valid for the applicable data.
+     * If the part is not valid, display error message with explanation.
+     * If the part is valid, creates part from text fields.
+     * @return The created part, or null if part creation failed.
+     */
     @FXML
     private Part createPartFromFields()
     {

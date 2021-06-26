@@ -94,6 +94,10 @@ public class InventoryController {
     private Button exitButton;
 
 
+    /**
+     * Initializes and populates Part and Product tableviews.
+     * Create listener for Part and Product search text fields.
+     */
     public void initialize ()
     {
         initializePartTable();
@@ -107,9 +111,11 @@ public class InventoryController {
                 UpdateProductList(productsSearchField.getText()));
     }
 
-    /*
-    ////    Parts Pane Actions
-    */
+    /**
+     * Switches to the Add Part scene.
+     * @param event The button press that triggered the method call.
+     * @throws IOException Will throw exception if switchScene() can not find the correct scene.
+     */
     @FXML
     private void partsAddButton(ActionEvent event) throws IOException
     {
@@ -117,31 +123,39 @@ public class InventoryController {
         switchScene(0, event);
     }
 
+    /**
+     * Checks if the user has selected a part to modify. If so, switch scene to Modify Part.
+     * @param event The button press that triggered the method call.
+     * @throws IOException Will throw exception if switchScene() can not find the correct scene.
+     */
     @FXML
     private void partsModifyButton(ActionEvent event) throws IOException {
-        if (partsTableView.getSelectionModel().getSelectedItem() != null) {
-            Part selected = partsTableView.getSelectionModel().getSelectedItem();
-            if (selected == null) {
-                Utilities.DisplayErrorMessage("Part Not Found", "Could not find the selected Part in IMS System.");
-                return;
-            } else {
-                Utilities.CurrentSelectedPart = selected;
-                switchScene(1, event);
-            }
+        Part selected = partsTableView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
+            Utilities.CurrentSelectedPart = selected;
+            switchScene(1, event);
         } else {
             Utilities.DisplayErrorMessage("Select Part", "You must select a Part to modify.");
         }
     }
+
+    /**
+     * If user has a part selected, delete the part.
+     * Will fail if: User cancels, part can not be found, or part is in any product.
+     * @param event The button press that triggered the method call.
+     * @throws IOException Will throw exception if switchScene() can not find correct scene.
+     */
     @FXML
     private void partsDeleteButton(ActionEvent event) throws IOException
     {
-        if (partsTableView.getSelectionModel().getSelectedItem() != null) {
+        Part selected = partsTableView.getSelectionModel().getSelectedItem();
+        if (selected != null) {
             if (Utilities.DisplayPrompt("Delete Part?", "Are you sure you want to delete the selected part? Deleted parts can not be recovered.") == true) {
-                Part selected = partsTableView.getSelectionModel().getSelectedItem();
                 if (!Utilities.IsPartInAnyProducts(selected)) {
                     if (Inventory.deletePart(selected) != true) {
                         Utilities.DisplayErrorMessage("Failed Deletion", "The item deletion has failed.");
                     } else {
+                        //Switch scene here to properly update the table view.
                         switchScene(4, event);
                     }
                 } else {
@@ -157,12 +171,22 @@ public class InventoryController {
         }
     }
 
+    /**
+     * Switch scene to Add Product menu.
+     * @param event The button press that triggered the method call.
+     * @throws IOException Will throw exception if switchScene() can not find correct scene.
+     */
     @FXML
     private void productsAddButton (ActionEvent event) throws IOException
     {
         switchScene(2, event);
     }
 
+    /**
+     * Check if user has selected a product and switch to Modify Product menu if they have.
+     * @param event The button press that triggered the method call.
+     * @throws IOException Will throw exception if switchScene() can not find correct scene.
+     */
     @FXML
     private void productsModifyButton (ActionEvent event) throws IOException {
         if (productsTableView.getSelectionModel().getSelectedItem() != null) {
@@ -173,13 +197,19 @@ public class InventoryController {
         }
     }
 
+    /**
+     * If user has a product selected, delete the product.
+     * Will fail if: User cancels or product can not be found.
+     * @param event The button press that triggered the method call.
+     * @throws IOException Will throw exception if switchScene() can not find correct scene.
+     */
     @FXML
     private void productsDeleteButton (ActionEvent event) throws IOException {
-        if (productsTableView.getSelectionModel().getSelectedItem() != null)
+        Product selected = productsTableView.getSelectionModel().getSelectedItem();
+        if (selected != null)
         {
             if (Utilities.DisplayPrompt("Delete Product?", "Are you sure you want to delete the selected product? Deleted products can not be recovered.") == true)
             {
-                Product selected = productsTableView.getSelectionModel().getSelectedItem();
                 if (Inventory.deleteProduct(selected)) {
                     switchScene(4, event);
                 } else {
@@ -191,19 +221,31 @@ public class InventoryController {
         }
     }
 
-    // Check if user actually wants to quit.
+    /**
+     * Call to Utilities to handle user exit request.
+     * @param event The button press that triggered the method call.
+     */
     @FXML
     private void inventoryExitButton(ActionEvent event)
     {
         Utilities.ExitApplication(event);
     }
 
+    /**
+     * Clear and repopulate the Part list.
+     */
     public void UpdatePartList()
     {
         partsTableView.getSelectionModel().clearSelection();
         partsTableView.getItems().clear();
         partsTableView.getItems().setAll(Inventory.getAllParts());
     }
+
+    /**
+     * Clear and repopulate the Part list using a search string.
+     * Will populate only with parts whose name matches the search string.
+     * @param searchString The string to search for.
+     */
     public void UpdatePartList(String searchString)
     {
         if (searchString.isBlank()) {
@@ -224,6 +266,9 @@ public class InventoryController {
         }
     }
 
+    /**
+     * Initializes and populates Part tableview.
+     */
     private void initializePartTable()
     {
         partsIDColumn.setCellValueFactory(new PropertyValueFactory<Part, Integer>("id"));
@@ -234,6 +279,9 @@ public class InventoryController {
         partsTableView.getItems().setAll(Inventory.getAllParts());
     }
 
+    /**
+     * Clear and repopulate the Product list.
+     */
     public void UpdateProductList()
     {
         productsTableView.getSelectionModel().clearSelection();
@@ -242,6 +290,11 @@ public class InventoryController {
 
     }
 
+    /**
+     * Clear and repopulate the Product list based on a search string.
+     * Only Products whose name matches the search string will be shown.
+     * @param searchString The string to search for.
+     */
     public void UpdateProductList(String searchString)
     {
         if (searchString.isBlank()) {
@@ -262,6 +315,9 @@ public class InventoryController {
         }
     }
 
+    /**
+     * Initialize and populate the Product tableview.
+     */
     private void initializeProductTable()
     {
         productsIdColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
@@ -272,6 +328,12 @@ public class InventoryController {
         productsTableView.getItems().setAll(Inventory.getAllProducts());
     }
 
+    /**
+     * Switch to any other scene in the program. Other menus can only switch to this menu but this menu can switch to any other menu.
+     * @param sceneIndex The scene to switch to: 0 = Add part | 1 = Modify part | 2 = Add Product | 3 = Modify Product | Default = This (Inventory)
+     * @param event The event that triggered the method call.
+     * @throws IOException Will throw exception if the scene to switch to can not be found.
+     */
     @FXML
     public void switchScene(int sceneIndex, ActionEvent event) throws IOException {
         //Scene Index: 0 = Add part | 1 = Modify part | 2 = Add product | 3 = Modify Product | Default = This (Inventory)

@@ -90,6 +90,10 @@ public class ModifyProductController {
     @FXML
     private Button modifyProductAssociatedPartRemoveButton;
 
+    /**
+     * Checks if all text fields contain valid data using Utilities.AreProductFieldsValid() and calls Inventory.UpdateProduct if they are.
+     * @param event The event that triggered the method call.
+     */
     @FXML
     void modifyProductSaveButton (ActionEvent event)
     {
@@ -112,6 +116,11 @@ public class ModifyProductController {
         }
     }
 
+    /**
+     * Check if user is ok with losing unsaved progress. Return to main menu if yes.
+     * @param event The event that triggered the method call.
+     * @throws IOException Will throw exception if scene can not be found in returnToMainMenu.
+     */
     @FXML
     void modifyProductCancelButton(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "All unsaved changes will be lost.");
@@ -123,20 +132,33 @@ public class ModifyProductController {
         }
     }
 
+    /**
+     * Exit application handled by Utilities.ExitApplication().
+     * @param event The event that triggered the method call.
+     */
     @FXML
     void modifyProductExitButton(ActionEvent event) { Utilities.ExitApplication(event); }
 
+    /**
+     * Moves a part from nonassociated parts to associated parts list.
+     * @param event The event that triggered the method call.
+     */
     @FXML
     void modifyProductAddPartAddButton (ActionEvent event)
     {
-        if (modifyProductAddPartTableView.getSelectionModel().getSelectedItem() != null) {
-            currentProductAssociatedParts.add(modifyProductAddPartTableView.getSelectionModel().getSelectedItem());
+        Part part = modifyProductAddPartTableView.getSelectionModel().getSelectedItem();
+        if (part != null) {
+            currentProductAssociatedParts.add(part);
             updateTableViews();
         } else {
             Utilities.DisplayErrorMessage("Select Part", "Please select part to add.");
         }
     }
 
+    /**
+     * Moves a part from the associated parts to nonassociated parts list.
+     * @param event The event that triggered the method call.
+     */
     @FXML
     void modifyProductAssociatedPartRemoveButton (ActionEvent event)
     {
@@ -147,6 +169,12 @@ public class ModifyProductController {
             Utilities.DisplayErrorMessage("Select Part", "Please select part to remove.");
         }
     }
+
+    /**
+     * Checks if the ID and Name the user input are already taken. If they are not, returns a new Product using values from text fields.
+     * If the name or ID are taken, returns null and displays error message.
+     * @return Newly created Product from text fields or null if name or ID are already in use.
+     */
     private Product createProductFromFields () {
         Integer id = Utilities.TryParseInt(modifyProductIDTextField.getText());
         if (!isIDAvailable(id)) {
@@ -170,6 +198,10 @@ public class ModifyProductController {
         }
         return product;
     }
+
+    /**
+     * Gets the product user wanted to modify from Utilites, populates all text fields, and calls initializeTableViews to initialize table views.
+     */
     public void initialize()
     {
         currentSelectedProduct = Utilities.CurrentSelectedProduct;
@@ -179,7 +211,14 @@ public class ModifyProductController {
             currentProductAssociatedParts.add(part);
         }
         initializeTableViews();
+        modifyProductAddPartTextField.textProperty().addListener(observable ->
+                updateTableViews(modifyProductAddPartTextField.getText(), Inventory.lookupPart(modifyProductAddPartTextField.getText())));
     }
+
+    /**
+     * Accepts a Product and populates the text fields with values from it.
+     * @param product The product to use to populate the menu's text fields.
+     */
     private void populateFields (Product product)
     {
         modifyProductIDTextField.setText(String.valueOf(product.getId()));
@@ -189,33 +228,10 @@ public class ModifyProductController {
         modifyProductMinTextField.setText(String.valueOf(product.getMin()));
         modifyProductMaxTextField.setText(String.valueOf(product.getMax()));
     }
-    private ObservableList<Part> getAvailableParts ()
-    {
-        ObservableList<Part> parts = FXCollections.observableArrayList();
-        for (Part part:Inventory.getAllParts()
-             ) {
-            if (!currentProductAssociatedParts.contains(part)){ parts.add(part); }
-        }
-        return parts;
-    }
-    private void updateTableViews()
-    {
-        modifyProductAssociatedPartTableView.getItems().setAll(currentProductAssociatedParts);
-        modifyProductAddPartTableView.getItems().setAll(getAvailableParts());
-    }
-    private void returnToMainMenu(ActionEvent event)
-    {
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        Parent root = null;
-        try {
-            root = FXMLLoader.load(getClass().getResource("Inventory.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        stage.setTitle("Inventory");
-        stage.setScene(new Scene(root, 800, 400));
-        stage.show();
-    }
+
+    /**
+     * Initializes and populates associated and nonassociated parts tableviews.
+     */
     private void initializeTableViews()
     {
         //Initialize Add Part Tableview
@@ -234,6 +250,78 @@ public class ModifyProductController {
 
         modifyProductAssociatedPartTableView.getItems().setAll(currentProductAssociatedParts);
     }
+
+    /**
+     * Gets list of all parts not associated with current Product.
+     * @return ObservableList of all nonassociated parts.
+     */
+    private ObservableList<Part> getAvailableParts ()
+    {
+        ObservableList<Part> parts = FXCollections.observableArrayList();
+        for (Part part:Inventory.getAllParts()) { if (!currentProductAssociatedParts.contains(part)){ parts.add(part); } }
+        return parts;
+    }
+
+    /**
+     * Updates both associated and nonassociated parts tableviews.
+     */
+    private void updateTableViews()
+    {
+        modifyProductAssociatedPartTableView.getItems().setAll(currentProductAssociatedParts);
+        modifyProductAddPartTableView.getItems().setAll(getAvailableParts());
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////
+    //TODO Add search feature and finish commenting this script. After that...done?????//
+    /////////////////////////////////////////////////////////////////////////////////////
+    private void updateTableViews(String searchString, ObservableList<Part> parts)
+    {
+        System.out.println("Updating Parts tableview from search string");
+        if (searchString.isBlank()) {
+            modifyProductAddPartTableView.getItems().clear();
+            modifyProductAddPartTableView.getItems().setAll(nonAssociatedParts);
+        } else {
+            if (Utilities.TryParseInt(searchString) != null) {
+                ObservableList<Part> part = FXCollections.observableArrayList();
+                Part result = Inventory.lookupPart(Utilities.TryParseInt(searchString));
+                if (!associatedParts.contains(result)) {
+                    part.add(result);
+                }
+                addProductAddPartTableView.getItems().setAll(part);
+            } else {
+                ObservableList<Part> searchResult = FXCollections.observableArrayList();
+                for (Part part: parts
+                ) {
+                    if (!associatedParts.contains(part)) { searchResult.add(part); }
+                }
+                addProductAddPartTableView.getItems().setAll(searchResult);
+            }
+        }
+    }
+
+    /**
+     * Closes current scene and opens main menu.
+     * @param event The event that triggered the method call.
+     */
+    private void returnToMainMenu(ActionEvent event)
+    {
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("Inventory.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setTitle("Inventory");
+        stage.setScene(new Scene(root, 800, 400));
+        stage.show();
+    }
+
+    /**
+     * Checks string against every other Product to see if a name has already been taken.
+     * @param name The string used to check if the name is available.
+     * @return True if the name is available, else false.
+     */
     private Boolean isNameAvailable(String name)
     {
         for (Product pro:Inventory.getAllProducts()
@@ -244,6 +332,13 @@ public class ModifyProductController {
         }
         return true;
     }
+
+    /**
+     *
+     * Checks int against every other Product to see if an ID has already been taken.
+     * @param ID The int used to check if the ID is available.
+     * @return True if the ID is available, else false.
+     */
     private Boolean isIDAvailable (int ID)
     {
         for (Product pro:Inventory.getAllProducts()

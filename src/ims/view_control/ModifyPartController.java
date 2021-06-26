@@ -65,6 +65,9 @@ public class ModifyPartController {
     @FXML
     private Button modifyPartExitButton;
 
+    /**
+     * Checks that there is a currently selected part in Utilities and then populates the text fields based on it.
+     */
     public void initialize()
     {
         //Check to make sure there is a part to modify before continuing.
@@ -78,6 +81,10 @@ public class ModifyPartController {
         }
     }
 
+    /**
+     * Detect when the user changes between InHouse and Outsourced. Updates menu text to reflect the change.
+     * @param event The event that triggered the method call.
+     */
     @FXML
     private void modifyPartToggleChanged(ActionEvent event)
     {
@@ -89,6 +96,14 @@ public class ModifyPartController {
             modifyPartMachineCompanyLabel.setText("Machine ID");
         }
     }
+
+    /**
+     * Checks all text fields to see if value given by user is valid for a Part.
+     * If yes, create part from fields and check once more to make sure the created Part is valid.
+     * If yes, call to Inventory.UpdatePart, clear all variables here, and clear Utilities.CurrentSelectedPart
+     * @param event The button press that triggered the method call.
+     * @throws IOException Will throw an exception if returnToMainMenu() fails to find the correct scene to load.
+     */
     @FXML
     private void modifyPartSaveButton (ActionEvent event)throws IOException
     {
@@ -105,6 +120,7 @@ public class ModifyPartController {
                     Inventory.updatePart(Inventory.getAllParts().indexOf(currentPart), modifiedPart);
                     currentPart = null;
                     modifiedPart = null;
+                    Utilities.CurrentSelectedPart = null;
                     returnToMainMenu(event);
                 } else {
                     Utilities.DisplayErrorMessage("Part Modification Failed", errorMessage);
@@ -114,6 +130,12 @@ public class ModifyPartController {
             Utilities.DisplayErrorMessage("Part Modification Failed", partCreateError);
         }
     }
+
+    /**
+     * Check if user is ok with losing unsaved changes, return to main menu.
+     * @param event The button press that triggered the method call.
+     * @throws IOException Will throw an exception if returnToMainMenu() fails to find the correct scene to load.
+     */
     @FXML
     private void modifyPartCancelButton (ActionEvent event)throws IOException
     {
@@ -126,12 +148,20 @@ public class ModifyPartController {
         }
     }
 
+    /**
+     * Call to Utilities to handle application exit.
+     * @param event The event that triggered the method call.
+     */
     @FXML
     private void modifyPartExitButton (ActionEvent event)
     {
         Utilities.ExitApplication(event);
     }
 
+    /**
+     * Populate the menus text fields with the appropriate data from a given Part.
+     * @param part The part to use when populating the fields.
+     */
     private void populateFields (Part part)
     {
         modifyPartIDTextField.setText(String.valueOf(part.getId()));
@@ -152,6 +182,11 @@ public class ModifyPartController {
             modifyPartMachineCompanyLabel.setText("Company Name:");
         }
     }
+
+    /**
+     * Switch scenes to return to the main menu.
+     * @param event Will throw an exception if the scene can not be found.
+     */
     private void returnToMainMenu(ActionEvent event)
     {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -168,6 +203,11 @@ public class ModifyPartController {
         Utilities.CurrentSelectedProduct = null;
     }
 
+    /**
+     * Creates and returns a new Part using data from the menus text fields.
+     * This method does not check for validity because that is handled by modifyPartSaveButton()
+     * @return The newly created Part.
+     */
     private Part createPartFromFields()
     {
         if (modifyPartInHouseRadio.isSelected()) {
@@ -192,7 +232,10 @@ public class ModifyPartController {
         }
     }
 
-
+    /**
+     * Checks every text field to make sure value is valid for Part creation. Returns error message of any invalid values.
+     * @return Returned string is a formatted error message explaining any mistakes found.
+     */
     private String areFieldsValid()
     {
         String message = "";

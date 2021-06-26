@@ -89,6 +89,14 @@ public class AddProductController {
     @FXML
     private Button addProductAssociatedPartRemoveButton;
 
+    private Product currentProduct;
+    private ObservableList<Part> associatedParts = FXCollections.observableArrayList();
+    private ObservableList<Part> nonAssociatedParts = FXCollections.observableArrayList();
+
+    /**
+     * Creates a product from the text fields and, if creation successful, adds new product to inventory.
+     * @param event The event that called the method.
+     */
     @FXML
     private void addProductSaveButton (ActionEvent event)
     {
@@ -100,6 +108,11 @@ public class AddProductController {
         }
     }
 
+    /**
+     * Checks if user really wants to cancel product creation. Return to main menu if they do.
+     * @param event The event that called the method.
+     * @throws IOException Will throw an exception if the new scene can not be found.
+     */
     @FXML
     private void addProductCancelButton(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "All unsaved changes will be lost.");
@@ -111,14 +124,22 @@ public class AddProductController {
         }
     }
 
+    /**
+     * Handled by Utilities. Simple exit button with dialog box confirming user wants to exit.
+     * @param event The event that called the method.
+     */
     @FXML
     private void addProductExitButton(ActionEvent event)
     {
         Utilities.ExitApplication(event);
     }
 
+    /**
+     * Check if user has a part selected. If so, add that part to associated parts list. If not, display error message.
+     * @param event The event that called the method.
+     */
     @FXML
-    private void setAddProductAddPartAddButton (ActionEvent event)
+    private void addProductAddPartAddButton (ActionEvent event)
     {
         Part part = addProductAddPartTableView.getSelectionModel().getSelectedItem();
         if (part != null) {
@@ -131,11 +152,9 @@ public class AddProductController {
         }
     }
 
-    private Product currentProduct;
-    private ObservableList<Part> associatedParts = FXCollections.observableArrayList();
-    private ObservableList<Part> nonAssociatedParts = FXCollections.observableArrayList();
-
-
+    /**
+     * Initialize tableviews and add listener to Add Part search bar.
+     */
     public void initialize()
     {
         //Creating dataset for add part and associated part table views, then initialize tableviews.
@@ -146,7 +165,9 @@ public class AddProductController {
                 updateNonIncludedPartsTableView(addProductAddPartTextField.getText(), Inventory.lookupPart(addProductAddPartTextField.getText())));
     }
 
-    //Initializes the Tableviews
+    /**
+     * Initializes and populates tableviews for available parts and associated parts.
+     */
     private void initializeTables()
     {
         //Non Associated Parts Tableview
@@ -168,6 +189,9 @@ public class AddProductController {
         addProductAssociatedPartTableView.getItems().setAll(associatedParts);
     }
 
+    /**
+     * Clears and repopulates included parts tableview.
+     */
     private void updateIncludedParts()
     {
         System.out.println("Refreshing Add Part tableview");
@@ -175,7 +199,9 @@ public class AddProductController {
         addProductAddPartTableView.getItems().clear();
         addProductAddPartTableView.getItems().setAll(nonAssociatedParts);
     }
-
+    /**
+     * Clears and repopulates non-included parts tableview.
+     */
     private void updateNonIncludedPartsTableView()
     {
         System.out.println("Refreshing Associated Part tableview");
@@ -184,6 +210,13 @@ public class AddProductController {
         addProductAssociatedPartTableView.getItems().setAll(associatedParts);
     }
 
+    /**
+     * Overloaded version that accepts a search string for user searching.
+     * Updates non-included parts tableview with results of search.
+     * Checks if search string is an int to allow for searching by ID
+     * @param searchString The string to search for.
+     * @param parts
+     */
     private void updateNonIncludedPartsTableView(String searchString, ObservableList<Part> parts)
     {
         System.out.println("Updating Parts tableview from search string");
@@ -199,9 +232,8 @@ public class AddProductController {
                 }
                 addProductAddPartTableView.getItems().setAll(part);
             } else {
-                ObservableList<Part> matches = Inventory.lookupPart(searchString);
                 ObservableList<Part> searchResult = FXCollections.observableArrayList();
-                for (Part part: matches
+                for (Part part: parts
                      ) {
                     if (!associatedParts.contains(part)) { searchResult.add(part); }
                 }
@@ -210,7 +242,11 @@ public class AddProductController {
         }
     }
 
-
+    /**
+     * Runs checks on all text fields to make sure the value given by the user is valid.
+     * Returns new product if all fields valid, or returns null and shows error message otherwise.
+     * @return Newly created product if creation successful, else returns null
+     */
     private Product createProductFromFields ()
     {
         String message = Utilities.AreProductFieldsValid(
@@ -230,6 +266,7 @@ public class AddProductController {
         String name = addProductNameTextField.getText();
         if (!isNameAvailable(name)) {
             Utilities.DisplayErrorMessage("Name Not Available.", "The item name is already used by another Product.");
+            return null;
         }
         Double price = Utilities.TryParseDouble(addProductPriceTextField.getText());
         Integer stock = Utilities.TryParseInt(addProductInventoryTextField.getText());
@@ -254,6 +291,10 @@ public class AddProductController {
         return null;
     }
 
+    /**
+     * Closes current stage and opens main menu.
+     * @param event The event that called the method.
+     */
     private void returnToMainMenu(ActionEvent event)
     {
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -267,6 +308,12 @@ public class AddProductController {
         stage.setScene(new Scene(root, 800, 400));
         stage.show();
     }
+
+    /**
+     * Checks if a given Product name is already taken.
+     * @param name The name to check.
+     * @return True if the name is available for use, false otherwise.
+     */
     private Boolean isNameAvailable (String name)
     {
         for (Product pro:Inventory.getAllProducts()
@@ -277,6 +324,12 @@ public class AddProductController {
         }
         return true;
     }
+
+    /**
+     * Checks if a given Product ID is already taken.
+     * @param ID The ID to check.
+     * @return True if the ID is available for use, false otherwise.
+     */
     private Boolean isIDAvailable (int ID)
     {
         for (Product pro:Inventory.getAllProducts()
